@@ -14,15 +14,15 @@ This is an MCP (Model Context Protocol) server designed to help LLMs (like Claud
 ## Requirements
 
 - Python 3.11 or higher
-- pipx (for easy execution)
+- uv package manager (recommended)
 
 ## Usage
 
 ### Running the MCP Server
 
 ```bash
-# Using pipx (recommended)
-pipx run --spec git+https://github.com/SarthakMishra/site-cloner.git site_cloner
+# Using uv (recommended)
+uv run -m site_cloner.main
 ```
 
 The server runs using stdio transport and can be connected to any MCP client.
@@ -39,12 +39,13 @@ Create a `.cursor/mcp.json` file in your project root with the following content
 {
   "mcpServers": {
     "site-cloner": {
-      "command": "pipx",
+      "command": "uv",
       "args": [
+        "--directory",
+        "/ABSOLUTE/PATH/TO/PARENT/FOLDER",
         "run",
-        "--spec", 
-        "git+https://github.com/SarthakMishra/site-cloner.git",
-        "site_cloner"
+        "-m",
+        "site_cloner.main"
       ]
     }
   }
@@ -59,12 +60,13 @@ To make the MCP server available globally in Cursor, add the following configura
 {
   "mcpServers": {
     "site-cloner": {
-      "command": "pipx",
+      "command": "uv",
       "args": [
+        "--directory",
+        "/ABSOLUTE/PATH/TO/PARENT/FOLDER",
         "run",
-        "--spec", 
-        "git+https://github.com/SarthakMishra/site-cloner.git",
-        "site_cloner"
+        "-m",
+        "site_cloner.main"
       ]
     }
   }
@@ -146,13 +148,13 @@ Args:
 ### Server not showing up in Cursor
 
 1. Restart Cursor
-2. Check your `claude_desktop_config.json` file syntax
-3. Make sure pipx is installed correctly: `python -m pipx --version`
+2. Check your configuration file syntax
+3. Make sure uv is installed correctly: `uv --version`
 4. Look at Cursor's MCP logs for errors:
    - `Output` → Select `Cursor MCP` from Dropdown
 5. Try running the server manually to see any errors:
    ```bash
-   pipx run --spec git+https://github.com/SarthakMishra/site-cloner.git site_cloner
+   uv run -m site_cloner.main
    ```
 
 ## Notes
