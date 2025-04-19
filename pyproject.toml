@@ -1,0 +1,64 @@
+[project]
+name = "site-cloner"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "beautifulsoup4>=4.13.4",
+    "httpx>=0.28.1",
+    "mcp[cli]>=1.6.0",
+]
+
+[dependency-groups]
+dev = [
+    "isort>=6.0.1",
+    "pylint>=3.3.6",
+    "pytest>=8.3.5",
+    "ruff>=0.11.6",
+]
+
+[tool.pyright]
+disableOrganizeImports = true
+ignore = ["*"]
+typeCheckingMode = "off"
+
+[tool.ruff]
+line-length = 120
+target-version = "py38"
+
+# Exclude files/directories
+exclude = [
+    ".git",
+    ".ruff_cache",
+    ".venv",
+    "venv",
+    "__pycache__",
+    "build",
+    "dist",
+    "vendor"
+]
+
+[tool.ruff.lint]
+# Enable all rules by default, then selectively disable
+select = ["ALL"]
+ignore = [
+    # Rules that conflict with other tools/preferences
+    "D203",  # one-blank-line-before-class
+    "D212",  # multi-line-summary-first-line
+    "FBT001",  # Boolean positional arg in function definition (required for typer)
+    "FBT002",  # Boolean default value in function definition (required for typer)
+    "PLR0912",  # Too many branches
+    "C901",  # too complex
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pylint]
+max-args = 5
+max-branches = 12
+max-statements = 50
+
+[tool.ruff.lint.pydocstyle]
+convention = "google" 
