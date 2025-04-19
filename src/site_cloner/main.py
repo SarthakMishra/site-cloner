@@ -74,8 +74,33 @@ async def fetch_page(url: str) -> dict[str, Any]:
         response = await fetch_url(url)
         html_content = response.text
 
+        # Get content length and create a summary
+        content_length = len(html_content)
+
+        # If content is too large (>10KB), truncate it and provide summary
+        max_content_length = 10 * 1024  # 10KB
+        truncated = False
+
+        if content_length > max_content_length:
+            truncated = True
+            html_content = html_content[:max_content_length] + "\n... [Content truncated]"
+
+        # Create a summary using BeautifulSoup
+        soup = BeautifulSoup(html_content, "html.parser")
+
+        summary = {
+            "title": soup.title.text if soup.title else "No title",
+            "total_length": content_length,
+            "num_links": len(soup.find_all("a")),
+            "num_images": len(soup.find_all("img")),
+            "num_scripts": len(soup.find_all("script")),
+            "num_styles": len(soup.find_all("link", rel="stylesheet")),
+            "truncated": truncated,
+        }
+
         return {
             "content": html_content,
+            "summary": summary,
             "status_code": response.status_code,
             "headers": dict(response.headers),
             "url": str(response.url),
@@ -85,6 +110,7 @@ async def fetch_page(url: str) -> dict[str, Any]:
         return {
             "error": str(e),
             "content": None,
+            "summary": None,
             "status_code": None,
             "headers": None,
             "url": url,
