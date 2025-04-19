@@ -434,10 +434,8 @@ async def analyze_page_structure(html_content: str) -> dict[str, Any]:
 
 def main() -> None:
     """Run the site-cloner MCP server using stdio transport."""
-    # Your server startup code here
-    from mcp.server import run_stdio_server
-
-    run_stdio_server(mcp)
+    # Simply run the FastMCP server with stdio transport
+    mcp.run(transport="stdio")
 
 
 if __name__ == "__main__":
