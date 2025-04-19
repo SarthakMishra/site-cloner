@@ -13,19 +13,26 @@ This is an MCP (Model Context Protocol) server designed to help LLMs (like Claud
 
 ## Requirements
 
-- Python 3.11 or higher
-- uv package manager (recommended)
+- Docker installed on your system
 
 ## Usage
 
-### Running the MCP Server
+### Running with Docker
 
+1. Build the Docker image:
+   ```bash
+   docker build -t site-cloner-mcp .
+   ```
+
+2. Run the container:
+   ```bash
+   docker run -i --rm site-cloner-mcp
+   ```
+
+For persistent storage of downloaded files, you can mount a volume:
 ```bash
-# Using uv (recommended)
-uv run -m site_cloner.main
+docker run -i --rm -v $(pwd)/downloaded_sites:/app/downloaded_site site-cloner-mcp
 ```
-
-The server runs using stdio transport and can be connected to any MCP client.
 
 ### Connecting to Cursor
 
@@ -39,13 +46,12 @@ Create a `.cursor/mcp.json` file in your project root with the following content
 {
   "mcpServers": {
     "site-cloner": {
-      "command": "uv",
+      "command": "docker",
       "args": [
-        "--directory",
-        "/ABSOLUTE/PATH/TO/PARENT/FOLDER",
         "run",
-        "-m",
-        "site_cloner.main"
+        "-i",
+        "--rm",
+        "site-cloner-mcp"
       ]
     }
   }
@@ -60,13 +66,12 @@ To make the MCP server available globally in Cursor, add the following configura
 {
   "mcpServers": {
     "site-cloner": {
-      "command": "uv",
+      "command": "docker",
       "args": [
-        "--directory",
-        "/ABSOLUTE/PATH/TO/PARENT/FOLDER",
         "run",
-        "-m",
-        "site_cloner.main"
+        "-i",
+        "--rm",
+        "site-cloner-mcp"
       ]
     }
   }
@@ -149,13 +154,31 @@ Args:
 
 1. Restart Cursor
 2. Check your configuration file syntax
-3. Make sure uv is installed correctly: `uv --version`
+3. Make sure Docker is installed and running correctly: `docker --version`
 4. Look at Cursor's MCP logs for errors:
    - `Output` → Select `Cursor MCP` from Dropdown
 5. Try running the server manually to see any errors:
    ```bash
-   uv run -m site_cloner.main
+   docker run -i --rm site-cloner-mcp
    ```
+
+### Module Not Found Error
+
+If you encounter a "ModuleNotFoundError: No module named 'site_cloner'" error:
+
+1. Check that your package name in pyproject.toml is correct
+2. Make sure the import statements in your Python files don't include "src." prefix
+3. Rebuild the Docker image after making changes:
+   ```bash
+   docker build --no-cache -t site-cloner-mcp .
+   ```
+
+### Checking Docker Logs
+
+To check Docker logs for any errors:
+```bash
+docker logs $(docker ps -q --filter ancestor=site-cloner-mcp)
+```
 
 ## Notes
 
