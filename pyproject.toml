@@ -1,14 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "site-cloner"
 version = "0.1.0"
-description = "Add your description here"
+description = "MCP server for website cloning"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "beautifulsoup4>=4.13.4",
-    "httpx>=0.28.1",
-    "mcp[cli]>=1.6.0",
+    "mcp",
+    "httpx",
+    "beautifulsoup4"
 ]
+
+[project.scripts]
+site-cloner = "site_cloner.main:main"
 
 [dependency-groups]
 dev = [
