@@ -1,0 +1,44 @@
+token_limit: 100000
+use_gitignore: true
+output_dir: docs/ai-docs
+max_content_length: 0
+commit:
+  strategy: semantic
+  llm:
+    model: meta-llama/llama-4-scout-17b-16e-instruct
+    provider: groq
+  convention:
+    types:
+      - feat # New feature
+      - fix # Bug fix
+      - docs # Documentation
+      - style # Formatting, missing semicolons, etc.
+      - refactor # Code change that neither fixes a bug nor adds a feature
+      - perf # Performance improvement
+      - test # Adding or updating tests
+      - build # Build system or external dependencies
+      - ci # CI configuration
+      - chore # Other changes that don't modify src or test files
+    scopes: []
+    max_length: 72
+
+    semantic:
+      similarity_threshold: 0.7
+      embedding_model: "flax-sentence-embeddings/st-codesearch-distroberta-base"
+      fallback_model: "all-MiniLM-L6-v2"
+      languages:
+        extensions:
+          - py    # Python
+          - js    # JavaScript
+          - ts    # TypeScript
+          - java  # Java
+          - kt    # Kotlin
+          - go    # Go
+          - c     # C
+          - cpp   # C++
+          - cs    # C#
+          - rb    # Ruby
+          - php   # PHP
+          - swift # Swift
+      cache_embeddings: true
+      max_cache_size: 1000
