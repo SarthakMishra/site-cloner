@@ -14,49 +14,15 @@ This is an MCP (Model Context Protocol) server designed to help LLMs (like Claud
 ## Requirements
 
 - Python 3.11 or higher
-- Dependencies: mcp, httpx, beautifulsoup4
-- uv package manager
-
-## Installation
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/SarthakMishra/site-cloner.git
-cd site-cloner
-```
-
-### 2. Install uv package manager
-
-macOS/Linux:
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-Windows:
-```bash
-powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
-
-Make sure to restart your terminal after installing uv to ensure the command is available.
-
-### 3. Set up Python environment
-
-```bash
-# Create and activate virtual environment
-uv venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-# Install dependencies
-uv sync
-```
+- pipx (for easy execution)
 
 ## Usage
 
 ### Running the MCP Server
 
 ```bash
-uv run site_cloner.py
+# Using pipx (recommended)
+pipx run --spec git+https://github.com/SarthakMishra/site-cloner.git site_cloner
 ```
 
 The server runs using stdio transport and can be connected to any MCP client.
@@ -73,13 +39,13 @@ Create a `.cursor/mcp.json` file in your project root with the following content
 {
   "mcpServers": {
     "site-cloner": {
-      "command": "uv",
+      "command": "pipx",
       "args": [
-                "--directory",
-                "/ABSOLUTE/PATH/TO/PARENT/FOLDER/site-cloner",
-                "run",
-                "site_cloner.py"
-            ]
+        "run",
+        "--spec", 
+        "git+https://github.com/SarthakMishra/site-cloner.git",
+        "site_cloner"
+      ]
     }
   }
 }
@@ -87,30 +53,23 @@ Create a `.cursor/mcp.json` file in your project root with the following content
 
 #### 2. Global configuration
 
-To make the MCP server available globally in Cursor:
-
-- Add it in Cursor Settings → MCP → Add a new Global MCP Server
-- Or create/edit `~/.cursor/mcp.json` in your home directory:
+To make the MCP server available globally in Cursor, add the following configuration by going to `Cursor Settings` → `MCP` → `Add new Global MCP Server`:
 
 ```json
 {
   "mcpServers": {
     "site-cloner": {
-      "command": "uv",
+      "command": "pipx",
       "args": [
-                "--directory",
-                "/ABSOLUTE/PATH/TO/PARENT/FOLDER/site-cloner",
-                "run",
-                "site_cloner.py"
-            ]
+        "run",
+        "--spec", 
+        "git+https://github.com/SarthakMishra/site-cloner.git",
+        "site_cloner"
+      ]
     }
   }
 }
 ```
-
-Remember to replace `/ABSOLUTE/PATH/TO/PARENT/FOLDER/site-cloner` with the actual absolute path to the script on your system.
-
-Once configured, Cursor will automatically run the process for you when needed.
 
 ## Available Tools
 
@@ -172,7 +131,7 @@ Args:
     html_content: The HTML content to analyze
 ```
 
-## Example Usage with Claude in Cursor
+## Example Usage with Claude
 
 1. Ask Claude to clone a website: "Please clone the website at example.com"
 2. Claude will use the available tools to:
@@ -184,27 +143,17 @@ Args:
 
 ## Troubleshooting
 
-### Server not showing up in Claude Desktop
+### Server not showing up in Cursor
 
-1. Restart Claude Desktop completely
+1. Restart Cursor
 2. Check your `claude_desktop_config.json` file syntax
-3. Make sure the file paths are absolute, not relative
-4. Look at Claude's logs for errors:
-   - macOS: `~/Library/Logs/Claude/mcp*.log`
-   - Windows: `%APPDATA%\Claude\logs\mcp*.log`
+3. Make sure pipx is installed correctly: `python -m pipx --version`
+4. Look at Cursor's MCP logs for errors:
+   - `Output` → Select `Cursor MCP` from Dropdown
 5. Try running the server manually to see any errors:
    ```bash
-   python /path/to/site_cloner.py
+   pipx run --spec git+https://github.com/SarthakMishra/site-cloner.git site_cloner
    ```
-
-### Tool calls failing
-
-If Claude attempts to use the tools but they fail:
-
-1. Check Claude's logs for errors
-2. Verify your Python version (3.11+ required)
-3. Ensure all dependencies are installed correctly
-4. Check if the website you're trying to clone has restrictions on automated access
 
 ## Notes
 
